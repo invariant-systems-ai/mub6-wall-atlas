@@ -1,0 +1,3 @@
+# Optional: real IBM Quantum hardware runs (Mode B experiment receipts).
+# Install on top of requirements.txt only when running on hardware.
+qiskit-ibm-runtime

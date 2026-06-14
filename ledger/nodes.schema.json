@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MUB(6) Wall Atlas node ledger",
+  "description": "Typed memory of verified progress. Nodes earn atlas points: non-financial, non-transferable, artifact-linked, evidence-weighted, and revocable if a claim is broken.",
+  "type": "object",
+  "required": ["ledger_version", "nodes"],
+  "properties": {
+    "ledger_version": { "type": "string" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "title", "claim", "scope", "artifact", "verifier", "evidence_level", "status", "independent_reruns", "independent_implementations", "dependencies", "known_weaknesses", "contributor"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+          "kind": { "enum": ["wall", "witness", "certificate", "defect"] },
+          "title": { "type": "string" },
+          "claim": { "type": "string" },
+          "scope": { "type": "string", "description": "which board/region of MUB(6) this covers" },
+          "artifact": { "type": "array", "items": { "type": "string" }, "description": "module / file paths the node points to" },
+          "verifier": { "type": "string", "description": "command or path that re-checks it, or \"none\"" },
+          "evidence_level": { "enum": ["kernel", "exact", "60-digit", "float", "conjecture", "none"] },
+          "status": { "enum": ["verified", "self-verified", "partial", "open", "refuted"] },
+          "independent_reruns": { "type": "integer", "minimum": 0, "description": "reruns of the verifier by parties other than the author (5 atlas points each). DERIVED: must equal the length of the 'reruns' evidence list; the scorer rejects any hand-set value that does not match its evidence." },
+          "independent_implementations": { "type": "integer", "minimum": 0, "description": "from-scratch reimplementations in another system (13 atlas points each). DERIVED: must equal the length of the 'implementations' evidence list." },
+          "reruns": { "type": "array", "description": "one checkable entry per independent verifier rerun; 'independent_reruns' is derived from its length", "items": { "type": "object", "required": ["by", "date", "evidence"], "properties": { "by": { "type": "string", "description": "who reran it" }, "date": { "type": "string", "description": "ISO date of the rerun" }, "evidence": { "type": "string", "description": "the checkable artifact: a URL, commit, log, or path a stranger can inspect" }, "sha256": { "type": "string", "description": "optional content hash of the evidence" }, "note": { "type": "string" } } } },
+          "implementations": { "type": "array", "description": "one checkable entry per independent reimplementation; 'independent_implementations' is derived from its length", "items": { "type": "object", "required": ["by", "date", "evidence"], "properties": { "by": { "type": "string" }, "date": { "type": "string" }, "evidence": { "type": "string", "description": "URL/commit/path to the independent implementation" }, "sha256": { "type": "string" }, "note": { "type": "string" } } } },
+          "dependencies": { "type": "array", "items": { "type": "string" } },
+          "known_weaknesses": { "type": "string" },
+          "contributor": { "type": "string" },
+          "bundle_doi": { "type": "string", "description": "Version-specific DOI of the exact deposit this node was verified against (optional, pins exactly what was checked)" },
+          "concept_doi": { "type": "string", "description": "Concept (all-versions) DOI that always resolves to the latest deposit (optional, the never-stale citation for the work)" },
+          "certificate_sha256": { "type": "string", "description": "sha256 of the exact certificate artifact, where the node IS a certificate (optional byte-binding)" },
+          "certificate_sha256_of": { "type": "string", "description": "exactly what certificate_sha256 is the hash of, so a stranger can reconcile it (optional)" },
+          "certificate_recompute": { "type": "string", "description": "the command that reproduces certificate_sha256 from the bundle (optional)" }
+        }
+      }
+    }
+  }
+}

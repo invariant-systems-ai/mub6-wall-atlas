@@ -1,0 +1,23 @@
+MUB(6) Wall Atlas
+Copyright 2026 Noah Erlwein (Invariant Systems)
+
+This project is dual-licensed.
+
+  - Code (the ledger scorer, schemas, scripts, and any future source):
+    Apache License 2.0. The full text is in LICENSE-CODE.
+
+  - Documents (README, ATLAS, POINTS, CONTRIBUTING, FAQ, INTENT,
+    SEED_ISSUES, DCO, CODE_OF_CONDUCT, and other prose/Markdown):
+    Creative Commons Attribution 4.0 International (CC BY 4.0).
+    The notice and link are in LICENSE-DOCS.md.
+
+Evidence and ledger data files (ledger/nodes.json and any generated
+JSON) are factual program output and records; they carry no separate
+license and may be freely reused with attribution.
+
+Contributions are accepted under the Developer Certificate of Origin 1.1
+(see DCO.md): inbound license equals the license above for the file type
+(Apache-2.0 for code, CC BY 4.0 for documents). Contributors retain
+authorship of their work.
+
+SPDX-License-Identifier: Apache-2.0 AND CC-BY-4.0

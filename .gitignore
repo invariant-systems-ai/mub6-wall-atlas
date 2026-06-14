@@ -1,0 +1,19 @@
+# Build artifacts (the README is the front door; do not commit the rendered PDF)
+build/
+*.pdf
+
+# Lean build output
+lean/.lake/
+lean/lake-packages/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+*.swp

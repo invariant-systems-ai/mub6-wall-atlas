@@ -1,0 +1,60 @@
+name: ledger PR report
+
+# When a pull request touches the node ledger, post a friendly summary of what it does
+# to the points, the reproduction counts, and the statuses, and pre-flag anything CI will
+# reject. This is the human-in-the-loop nudge: the rest of the atlas polices itself, but a
+# ledger change deserves a maintainer's glance, and this lays out exactly what to look at.
+#
+# SECURITY: this uses pull_request_target so it can comment on fork PRs, which means it runs
+# with a write token in the BASE repo's context. It therefore NEVER checks out or executes
+# code from the PR head. It reads the head's ledger/nodes.json as DATA only (git show), and
+# runs the BASE repo's report script. Do not add a head checkout or run head scripts here.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "ledger/nodes.json"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the base repo (trusted code only)
+        uses: actions/checkout@v4          # default ref = base branch; no PR head code
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Read the PR's ledger as data (no head code executed)
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --no-tags --depth=1 origin "pull/${PR}/head"
+          # Extract just the one data file from the PR head; fall back to base (no-diff) if absent.
+          git show "FETCH_HEAD:ledger/nodes.json" > /tmp/head_nodes.json 2>/dev/null \
+            || cp ledger/nodes.json /tmp/head_nodes.json
+
+      - name: Build the report
+        run: python3 ci/pr_ledger_report.py ledger/nodes.json /tmp/head_nodes.json > /tmp/report.md
+
+      - name: Post or update the sticky comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          body="$(cat /tmp/report.md)"
+          cid="$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+                 --jq '.[] | select(.body | contains("<!-- mub6-ledger-bot -->")) | .id' | head -1)"
+          if [ -n "$cid" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$cid" -f body="$body" >/dev/null
+            echo "updated comment $cid"
+          else
+            gh api -X POST "repos/$REPO/issues/$PR/comments" -f body="$body" >/dev/null
+            echo "created comment"
+          fi

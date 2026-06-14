@@ -1,0 +1,10 @@
+/* Atlas-specific running-header override (layered on top of is-doc.css). */
+@page {
+  @top-left  { content: "MUB(6) WALL ATLAS"; }
+  @top-right { content: "exact walls, checkable bricks"; }
+  @bottom-left { content: "10.5281/zenodo.20670933"; }
+}
+@page :first {
+  @top-left  { content: ""; }
+  @top-right { content: ""; }
+}

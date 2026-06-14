@@ -1,0 +1,25 @@
+name: lean kernel-check
+
+# Builds the vendored Lean 4 layer (lean/Mub6Lemmas) from the kernel on the pinned
+# toolchain (lean/lean-toolchain = leanprover/lean4:v4.20.0), no mathlib, and prints the
+# axiom footprint of every headline theorem. This is the green check Lean reviewers want.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build kernel-checked lemmas
+        working-directory: lean
+        run: lake build Mub6Lemmas
+      - name: Axiom audit
+        working-directory: lean
+        run: lake env lean AxiomAudit.lean

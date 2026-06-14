@@ -1,0 +1,34 @@
+name: qiskit-game smoke test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  game-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install numpy (the math core needs only numpy)
+        run: pip install numpy
+      - name: Feasibility self-test (validates the MUB triple, and f(v*) = W exactly)
+        run: python3 qiskit_game/src/mub6_game/feasibility.py
+      - name: Wall-room demo reaches the wall
+        run: python3 qiskit_game/play.py
+
+  notebook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install the game + Qiskit + Jupyter
+        run: pip install -r qiskit_game/requirements.txt
+      - name: Execute the embedded-wall notebook end to end
+        working-directory: qiskit_game/notebooks
+        run: jupyter nbconvert --to notebook --execute --inplace
+             --ExecutePreprocessor.timeout=600 03_mub6_embedded_wall.ipynb

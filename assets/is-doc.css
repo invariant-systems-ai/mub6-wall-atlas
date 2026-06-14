@@ -1,0 +1,110 @@
+/* Invariant Systems document theme - matches the platform deck (navy + teal).
+   Rendered with WeasyPrint. */
+
+@page {
+  size: Letter;
+  margin: 0.9in 0.85in 0.95in 0.85in;
+  @top-left  { content: "INVARIANT SYSTEMS"; font: 7.5pt "DejaVu Sans"; color: #94a3b8; letter-spacing: 0.16em; }
+  @top-right { content: "Error correction you can prove"; font: 7.5pt "DejaVu Sans"; color: #94a3b8; }
+  @bottom-left  { content: "invariantsystems.io"; font: 7.5pt "DejaVu Sans"; color: #94a3b8; }
+  @bottom-right { content: counter(page); font: 8.5pt "DejaVu Sans"; color: #64748b; }
+  @top-center { content: ""; }
+}
+@page :first {
+  @top-left { content: ""; }
+  @top-right { content: ""; }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "DejaVu Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  color: #11182b; font-size: 10.5pt; line-height: 1.5;
+}
+
+/* Pandoc title block = PDF cover. Body H1s start new sections. */
+header#title-block-header {
+  margin: 1.0in 0 0.35in 0; padding-top: 0.16in;
+  border-top: 4pt solid #0d9488;
+}
+header#title-block-header h1.title {
+  font-size: 28pt; color: #0f172a; line-height: 1.10;
+  margin: 0; padding: 0; border: none;
+}
+
+h1 {
+  font-size: 23pt; color: #0f172a; line-height: 1.16;
+  margin: 0 0 0.14in 0; padding-top: 0.14in;
+  border-top: 3.5pt solid #0d9488;
+  string-set: doctitle content();
+}
+body > h1 { break-before: page; }
+h1 + h3 { color: #475569; font-weight: normal; font-size: 13pt; margin: 0 0 0.10in 0; }
+
+nav#TOC {
+  margin: 0.20in 0 0.35in 0; padding: 0.18in 0.20in;
+  border: 1pt solid #e2e8f0; border-left: 3.5pt solid #0d9488;
+  background: #fafcff; border-radius: 6pt;
+}
+nav#TOC::before {
+  content: "Contents"; display: block; margin-bottom: 0.08in;
+  color: #0f766e; font-size: 12pt; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+nav#TOC ul { margin: 0.02in 0; padding-left: 0.18in; }
+nav#TOC li { margin-bottom: 0.025in; }
+
+h2 {
+  font-size: 14.5pt; color: #0f766e; margin: 0.30in 0 0.10in 0;
+  padding-bottom: 0.045in; border-bottom: 1.5pt solid #e2e8f0;
+  page-break-after: avoid;
+}
+h3 { font-size: 12pt; color: #0d9488; margin: 0.18in 0 0.06in 0; page-break-after: avoid; }
+h4 { font-size: 10.5pt; color: #0f172a; margin: 0.14in 0 0.04in 0; page-break-after: avoid; }
+
+p { margin: 0.06in 0 0.10in 0; }
+strong { color: #0f172a; }
+em { color: #334155; }
+a { color: #0d9488; text-decoration: none; }
+
+ul, ol { margin: 0.05in 0 0.11in 0; padding-left: 0.28in; }
+li { margin-bottom: 0.05in; }
+li::marker { color: #0d9488; }
+
+/* Section dividers (markdown ---) become a subtle teal rule */
+hr {
+  border: none; height: 2pt; margin: 0.20in 0;
+  background: linear-gradient(90deg, #0d9488 0%, #14b8a6 45%, #e2e8f0 100%);
+}
+
+/* Tables = the deck's .clean look */
+table { border-collapse: collapse; width: 100%; font-size: 9.3pt; margin: 0.12in 0; }
+thead { background: #f8fafc; }
+th, td { border-bottom: 1pt solid #e2e8f0; padding: 0.055in 0.10in; text-align: left; vertical-align: top; }
+th { color: #0f766e; font-size: 8.3pt; text-transform: uppercase; letter-spacing: 0.05em; }
+tr { page-break-inside: avoid; }
+tbody tr:nth-child(even) { background: #fafcff; }
+
+/* Blockquotes = callout cards (proven-property highlights) */
+blockquote {
+  margin: 0.14in 0; padding: 0.12in 0.18in;
+  border: 1pt solid #e2e8f0; border-left: 3.5pt solid #0d9488;
+  background: #fafcff; border-radius: 5pt; color: #0f172a;
+  page-break-inside: avoid;
+}
+blockquote p { margin: 0.03in 0; }
+
+/* Code */
+code {
+  font-family: "DejaVu Sans Mono", monospace; font-size: 0.85em;
+  background: #f1f5f9; color: #0f766e; padding: 0.005in 0.04in; border-radius: 3pt;
+}
+pre {
+  background: #0f172a; color: #e2e8f0; padding: 0.13in 0.16in; border-radius: 6pt;
+  font-size: 8.6pt; line-height: 1.45; page-break-inside: avoid;
+  border-left: 3pt solid #0d9488;
+}
+pre code { background: none; color: inherit; padding: 0; }
+
+/* Keep emphasised verdict phrasing readable */
+h2 code, h3 code { background: none; color: inherit; }

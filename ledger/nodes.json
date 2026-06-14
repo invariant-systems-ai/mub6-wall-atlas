@@ -1,0 +1,267 @@
+{
+  "ledger_version": "0.1.0",
+  "_note": "Seeded from the published bundle. status 'self-verified' = author-checked, exact, awaiting an independent rerun (that rerun is brick B1/B2/B3, earns 5 atlas points, and promotes the node to 'verified'). Atlas points are non-financial, non-transferable, revocable if broken.",
+  "nodes": [
+    {
+      "id": "W.canonical-triple",
+      "kind": "wall",
+      "title": "Canonical triple fourth-vector wall",
+      "claim": "max f = W = (88 + 3*sqrt(6))/100 after the canonical product triple {Z2(x)Z3, X2(x)Q0, Y2(x)Q1}",
+      "scope": "canonical triple (T0), d=6",
+      "artifact": [
+        "python/mub6_global_wall_exact_certificate.py",
+        "python/mub6_transport_closure_exact.py"
+      ],
+      "verifier": "make verify-global",
+      "bundle_doi": "10.5281/zenodo.20682233",
+      "concept_doi": "10.5281/zenodo.20670933",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [
+        "C.global-wall",
+        "Wt.canonical-witness"
+      ],
+      "known_weaknesses": "No external independent rerun yet (open brick B1).",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "Wt.canonical-witness",
+      "kind": "witness",
+      "title": "Explicit algebraic witness attaining W",
+      "claim": "An explicit algebraic unit vector v* attains f(v*) = W exactly (18 overlap identities, democratic counts).",
+      "scope": "canonical triple (T0), d=6 (lower bound)",
+      "artifact": [
+        "python/mub6_d6_wall_attainment_exact.py"
+      ],
+      "verifier": "python3 python/mub6_d6_wall_attainment_exact.py",
+      "bundle_doi": "10.5281/zenodo.20682233",
+      "concept_doi": "10.5281/zenodo.20670933",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Lower bound only; pairs with the upper-bound certificate C.global-wall.",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "C.global-wall",
+      "kind": "certificate",
+      "title": "Exact PSD global-wall certificate (independently checkable)",
+      "claim": "max f <= W on the unit sphere, via an exact PSD/Veronese certificate Q (degree-4 Sym^4 coefficient matrices) over Q(sqrt2,sqrt3) with deterministic closure over the triple's 432-element symmetry group, checked by a stdlib-only verifier against a stored Q (does not rebuild it).",
+      "scope": "canonical triple (T0), d=6 (upper bound)",
+      "artifact": [
+        "verify_global_certificate.py",
+        "evidence/global-wall-certificate-Q-exact.json.gz"
+      ],
+      "verifier": "make verify-global",
+      "bundle_doi": "10.5281/zenodo.20682233",
+      "concept_doi": "10.5281/zenodo.20670933",
+      "certificate_sha256": "c6badfeb788871465aad04dbcea99e2f91ee6bac4e9e8a9f094550ed5a49f0b7",
+      "certificate_sha256_of": "the DECOMPRESSED contents of evidence/global-wall-certificate-Q-exact.json.gz (the bundle's SHA256SUMS pins the .gz at 116f8e63a0c1686f9be732f10ba45317e011030a7fc27cb5a700f77ec9a16725)",
+      "certificate_recompute": "gunzip -c evidence/global-wall-certificate-Q-exact.json.gz | sha256sum",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Verifier checks a stored Q; an independent re-parse / re-implementation is open (bricks B2, B3).",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "C.local-interval",
+      "kind": "certificate",
+      "title": "Local interval certificate around v*",
+      "claim": "f(u) < W for every unit u with 0 < theta(u,v*) <= r0 = 111/12640, by exact rational interval arithmetic.",
+      "scope": "canonical triple (T0), d=6 (local)",
+      "artifact": [
+        "python/mub6_d6_wall_local_certificate.py"
+      ],
+      "verifier": "python3 python/mub6_d6_wall_local_certificate.py",
+      "bundle_doi": "10.5281/zenodo.20682233",
+      "concept_doi": "10.5281/zenodo.20670933",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [
+        "Wt.canonical-witness"
+      ],
+      "known_weaknesses": "Local (ball of radius r0), not global; the global statement is C.global-wall.",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "W.product-ceiling",
+      "kind": "wall",
+      "title": "Product-ceiling law",
+      "claim": "f_prod = (d-a)/(d-1), with an unaligned/conditioned extension that drops the alignment hypothesis.",
+      "scope": "product rooms (general)",
+      "artifact": [
+        "python/mub6_product_ceiling_law_verifier.py",
+        "python/mub6_unaligned_product_ceiling.py"
+      ],
+      "verifier": "python3 python/mub6_unaligned_product_ceiling.py",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Law is exact in the aligned model; the aligned-room test at d=24 is float (node D.d24-exact).",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "Wt.t1-attainment",
+      "kind": "witness",
+      "title": "T1 second-wall attainment",
+      "claim": "An explicit algebraic witness attains W(T1) = (1163 + 38*sqrt(3))/1265 exactly; minpoly 6325x^2 - 11630x + 5329.",
+      "scope": "indirect product triple (T1), d=6 (lower bound)",
+      "artifact": [
+        "python/mub6_t1_exact_attainment.py",
+        "python/mub6_t1_wall_study.py"
+      ],
+      "verifier": "python3 python/mub6_t1_exact_attainment.py",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Attainment only; the matching global upper bound is open (node D.t1-global / brick B5).",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "W.d12-d24-identity",
+      "kind": "wall",
+      "title": "Cross-room defect identity d12/d24",
+      "claim": "11*(1 - W12) = 23*(1 - W24), explained structurally by the lift-law lemma (stabilizer-code compression).",
+      "scope": "d=12 and d=24 K4-chain rooms",
+      "artifact": [
+        "python/mub6_lift_law_lemma.py",
+        "python/mub6_round7_profile_lift_algebra.py",
+        "python/mub6_d12_d24_closed_form_hunt.py"
+      ],
+      "verifier": "python3 python/mub6_round7_profile_lift_algebra.py",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Identity is exact; the individual room walls W12, W24 are 60-digit (no closed form yet).",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "Wt.d16-board-room",
+      "kind": "witness",
+      "title": "d=16 board room construction",
+      "claim": "17 MUBs via the general dual-basis symplectic spread over GF(16); exact 255-dimensional tiling, residual 0.",
+      "scope": "d=16 room",
+      "artifact": [
+        "python/mub6_d16_room_scan.py"
+      ],
+      "verifier": "python3 python/mub6_d16_room_scan.py",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Construction/tiling result; not a d=6 wall.",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "C.two-board-lean",
+      "kind": "certificate",
+      "title": "Two-board combinatorial frame (kernel-checked)",
+      "claim": "The F2^6 hexagram board and the Z6^2 Weyl board (12 lines, almost-disjoint cap at 3, 24 maximal triples, CRT factorization), with a Lean companion.",
+      "scope": "combinatorial frame, d=6",
+      "artifact": [
+        "python/mub6_iching_weyl_boards.py",
+        "lean/Mub6Lemmas/IChingBoardCap.lean"
+      ],
+      "verifier": "cd lean && lake build Mub6Lemmas",
+      "evidence_level": "kernel",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Combinatorial layer is kernel-checked; the analytic chain is not yet in Lean (brick B4).",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "D.no-naive-sos",
+      "kind": "defect",
+      "title": "No naive degree-4/6 SOS certificate",
+      "claim": "No degree-4 and no degree-6 SOS certificate exists for W - f in the naive cone (exact separating functionals), forcing the X-space/transport route.",
+      "scope": "canonical triple (T0), certificate-search method",
+      "artifact": [
+        "python/mub6_degree6_refutation_exact.py"
+      ],
+      "verifier": "python3 python/mub6_degree6_refutation_exact.py",
+      "evidence_level": "exact",
+      "status": "self-verified",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Refers to the naive cone; says where the method must be stronger, not that no SOS proof exists in any cone.",
+      "contributor": "N. Erlwein"
+    },
+    {
+      "id": "D.t1-global",
+      "kind": "defect",
+      "title": "T1 global upper bound open",
+      "claim": "The matching global upper bound for W(T1) is not yet established; T1 is one-sided (attainment only). T0 and T1 walls live in different fields.",
+      "scope": "indirect product triple (T1), d=6 (upper bound)",
+      "artifact": [
+        "python/mub6_t1_wall_study.py"
+      ],
+      "verifier": "none",
+      "evidence_level": "none",
+      "status": "open",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [
+        "Wt.t1-attainment"
+      ],
+      "known_weaknesses": "Open frontier (brick B5).",
+      "contributor": "open"
+    },
+    {
+      "id": "D.d10-closed-form",
+      "kind": "defect",
+      "title": "d=10 wall has no closed form yet",
+      "claim": "The d=10 wall is measured (defect ~ 0.0225) at high precision, but a PSLQ closed-form hunt found nothing and no structural obstruction is proven.",
+      "scope": "d=10 room",
+      "artifact": [
+        "python/mub6_d10_wall_closed_form_hunt.py"
+      ],
+      "verifier": "none",
+      "evidence_level": "60-digit",
+      "status": "open",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [],
+      "known_weaknesses": "Numerical only; open frontier (brick B6).",
+      "contributor": "open"
+    },
+    {
+      "id": "D.d24-exact",
+      "kind": "defect",
+      "title": "d=24 aligned-room ceiling not yet exact",
+      "claim": "The aligned 3x8 product room tests the ceiling-law prediction 21/23 numerically; an exact confirmation/refutation is open.",
+      "scope": "d=24 aligned product room",
+      "artifact": [
+        "python/mub6_d24_aligned_product_room.py"
+      ],
+      "verifier": "none",
+      "evidence_level": "float",
+      "status": "open",
+      "independent_reruns": 0,
+      "independent_implementations": 0,
+      "dependencies": [
+        "W.product-ceiling"
+      ],
+      "known_weaknesses": "Float only; open frontier (brick B11).",
+      "contributor": "open"
+    }
+  ]
+}

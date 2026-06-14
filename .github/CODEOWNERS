@@ -1,0 +1,19 @@
+# Code owners route review automatically. The honesty-critical surfaces, the ledger,
+# the scorer and its guard, and the CI that enforces them, ask for a maintainer's eyes
+# on every change. Everything else (docs, puzzles, landings) is open to lighter review,
+# which is the point: automation keeps the numbers clean so humans spend their attention
+# on the judgment calls (is this brick real, does it graduate to board-class).
+
+# Default owner.
+*                       @invariant-systems-ai
+
+# Honesty-critical: the evidence-bound ledger, scorer, guard test, and generated scoreboard.
+/ledger/                @invariant-systems-ai
+/SCOREBOARD.md          @invariant-systems-ai
+
+# The CI that enforces the rules, and the receipt/automation surfaces.
+/.github/               @invariant-systems-ai
+/ci/                    @invariant-systems-ai
+
+# Prior-work attribution: changes here touch how others are credited.
+/ACKNOWLEDGMENTS.md     @invariant-systems-ai

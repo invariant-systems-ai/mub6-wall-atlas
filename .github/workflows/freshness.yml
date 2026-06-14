@@ -1,0 +1,79 @@
+name: monthly freshness re-verify
+
+# A repo that runs itself dies of silent rot, not of loud bugs: a dependency changes
+# under the verifiers, a DOI stops resolving, the ledger drifts from its manifest, and
+# nothing in a quiet month tells you. This sweep re-runs the whole thing on fresh runners
+# once a month (and on demand). GitHub emails the maintainers automatically when a
+# scheduled run fails, so a green inbox means the atlas still checks out.
+#
+# Hard-gated steps catch genuine rot (deps broke, internal incoherence). External-world
+# checks (DOI liveness) are informational and never fail the run, so a transient Zenodo
+# outage does not cry wolf.
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"      # 06:00 UTC on the 1st of each month
+  workflow_dispatch:
+
+jobs:
+  reverify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # --- Hard gates: the ledger and its guards still hold on a clean machine. ---
+      - name: Ledger, guard, scoreboard, links, coherence
+        run: |
+          python3 ledger/score_atlas.py
+          python3 ledger/test_score_atlas.py
+          python3 ledger/score_atlas.py --check-scoreboard
+          python3 ci/check_links.py
+          python3 ledger/check_bundle_coherence.py
+      - name: AIIR receipts still match the ledger
+        run: python3 ledger/emit_receipts.py --check
+
+      # --- Hard gate: the math core still verifies on freshly resolved dependencies. ---
+      - name: Feasibility + wall-room on fresh numpy
+        run: |
+          pip install numpy
+          python3 qiskit_game/src/mub6_game/feasibility.py
+          python3 qiskit_game/play.py
+      - name: Embedded-wall notebook executes on fresh Qiskit
+        run: |
+          pip install -r qiskit_game/requirements.txt
+          cd qiskit_game/notebooks
+          jupyter nbconvert --to notebook --execute --inplace \
+            --ExecutePreprocessor.timeout=600 03_mub6_embedded_wall.ipynb
+
+      # --- Informational: external world, never fails the run. ---
+      - name: DOI liveness (informational)
+        continue-on-error: true
+        run: |
+          {
+            echo "## DOI liveness ($(date -u +%Y-%m-%d))"
+            echo ""
+            for doi in \
+              10.5281/zenodo.20670933 \
+              10.5281/zenodo.20682233 \
+              10.5281/zenodo.19991937 ; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 30 "https://doi.org/$doi" || echo "000")
+              echo "- \`$doi\` -> HTTP $code"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  lean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Rebuild kernel-checked lemmas and re-audit axioms
+        working-directory: lean
+        run: |
+          lake build Mub6Lemmas
+          lake env lean AxiomAudit.lean

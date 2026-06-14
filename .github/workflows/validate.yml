@@ -1,0 +1,40 @@
+name: validate atlas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate the node ledger and print atlas points
+        run: python3 ledger/score_atlas.py
+      - name: Guard intact (reproduction counters and 'verified' status are evidence-bound)
+        run: python3 ledger/test_score_atlas.py
+      - name: Scoreboard is in sync with the ledger (regenerate with --write-scoreboard)
+        run: python3 ledger/score_atlas.py --check-scoreboard
+      - name: Publish the scoreboard to the run summary
+        if: always()
+        run: python3 ledger/score_atlas.py --scoreboard >> "$GITHUB_STEP_SUMMARY"
+      - name: Check ledger JSON parses
+        run: |
+          python3 -m json.tool ledger/nodes.json > /dev/null
+          python3 -m json.tool ledger/nodes.schema.json > /dev/null
+      - name: All Python compiles
+        run: python3 -m compileall -q .
+      - name: Internal Markdown links resolve
+        run: python3 ci/check_links.py
+      - name: AIIR research-evidence receipts match the ledger (untampered)
+        run: python3 ledger/emit_receipts.py --check
+      - name: Ledger artifacts are hash-pinned in the bundle manifest
+        run: python3 ledger/check_bundle_coherence.py
+      - name: No stale launch strings
+        run: |
+          # block the superseded v1 version DOI (20670934); the concept DOI 20670933 is valid.
+          ! grep -RInE 'git clone <this-bundle>|20670934|BioGo|in[ -]vivo' \
+            --include='*.md' --include='*.json' --include='*.py' .
