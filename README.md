@@ -155,6 +155,8 @@ exact result is `proof_sketch`, **not** `verified`. Nothing reaches `verified` u
 an independent rerun. CI regenerates the receipts and fails if they drift from the ledger or if
 any content hash does not match (`python3 ledger/emit_receipts.py --check`).
 
+An earlier workflow also emitted signed commit receipts with an external tool whose source is no longer public; it has been removed. The research-evidence receipts described here are unaffected: the standard-library `ledger/emit_receipts.py` in this repository produces and checks them.
+
 To be clear about what that label means, because it is easy to misread: `proof_sketch` is AIIR's
 coarse research-evidence enum value, and in this atlas it means *author-supplied exact
 certificate, not yet independently rerun*. It does **not** mean the proof path is informal or the
